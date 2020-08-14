@@ -72,7 +72,11 @@ def spark_start(config: Dict = {}) -> SparkSession:
         if k == "spark.jars":
             v = spark_jars + "," + v
         conf.set(k, v)
-
+     
+    # Checks if "spark.driver.host" is set, if is not set to "127.0.0.1" 
+    if not conf.contains("spark.driver.host"):
+        conf.set("spark.driver.host", "localhost")
+        
     # we have to manage the py4j gateway ourselves so that we can control the JVM process
     gateway = launch_gateway(conf=conf, popen_kwargs=popen_kwargs)
     sc = SparkContext(gateway=gateway)
