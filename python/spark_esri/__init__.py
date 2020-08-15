@@ -73,7 +73,7 @@ def spark_start(config: Dict = {}) -> SparkSession:
             v = spark_jars + "," + v
         conf.set(k, v)
      
-    # Checks if "spark.driver.host" is set, if is not set to localhost 
+    # Set "spark.driver.host" to localhost if not defined by user in conf 
     if not conf.contains("spark.driver.host"):
         conf.set("spark.driver.host", "localhost")
         
