@@ -67,16 +67,13 @@ def spark_start(config: Dict = {}) -> SparkSession:
     conf.set("spark.sql.catalogImplementation", "in-memory")
     conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     conf.set("spark.jars", spark_jars)
+    conf.set("spark.driver.host", "localhost")
     # Add/Update user defined spark configurations.
     for k, v in config.items():
         if k == "spark.jars":
             v = spark_jars + "," + v
         conf.set(k, v)
-     
-    # Set "spark.driver.host" to localhost if not defined by user in conf 
-    if not conf.contains("spark.driver.host"):
-        conf.set("spark.driver.host", "localhost")
-        
+            
     # we have to manage the py4j gateway ourselves so that we can control the JVM process
     gateway = launch_gateway(conf=conf, popen_kwargs=popen_kwargs)
     sc = SparkContext(gateway=gateway)
